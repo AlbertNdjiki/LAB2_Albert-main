@@ -1,14 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GestionJeu : MonoBehaviour
 {
     // ***** Attributs *****
 
     private int _pointage = 0;  // Attribut qui conserve le nombre d'accrochages
-    private int _accrochageNiveau1 = 0;  // Atribut qui conserve le nombre d'accrochage pour le niveau 1
-    private float _tempsNiveau1 = 0.0f;  // Attribut qui conserve le temps pour le niveau 1
+    private float _tempsFinal = 0;
+    private float _tempsDepart = 0;
+    //private int _accrochageNiveau1 = 0;  // Atribut qui conserve le nombre d'accrochage pour le niveau 1
+    //private float _tempsNiveau1 = 0.0f;  // Attribut qui conserve le temps pour le niveau 1
 
     // ***** M?thodes priv?es *****
     private void Awake()
@@ -29,18 +32,15 @@ public class GestionJeu : MonoBehaviour
 
     private void Start()
     {
-        InstructionsDepart();  // Affiche les instructions de d?part
+        _tempsDepart = Time.time;
     }
 
-    /*
-     * M?thode qui affiche les instructions au d?part
-     */
-    private static void InstructionsDepart()
+    private void Update()
     {
-        Debug.Log("*** Course ? obstacles");
-        Debug.Log("Le but du jeu est d'atteindre la zone d'arriv?e le plus rapidement possible");
-        Debug.Log("Chaque contact avec un obstable entra?nera une p?nalit?");
-        Debug.Log("");
+        if (SceneManager.GetActiveScene().buildIndex == 4 || SceneManager.GetActiveScene().buildIndex == 0)
+        {
+            Destroy(gameObject);
+        }
     }
 
     // ***** M?thodes publiques ******
@@ -51,6 +51,8 @@ public class GestionJeu : MonoBehaviour
     public void AugmenterPointage()
     {
         _pointage++;
+        UIManager uiManager = FindObjectOfType<UIManager>();
+        uiManager.ChangerPointage(_pointage);
     }
 
     // Accesseur qui retourne la valeur de l'attribut pointage
@@ -59,6 +61,24 @@ public class GestionJeu : MonoBehaviour
         return _pointage;
     }
 
+    public float GetTempsDepart()
+    {
+        return _tempsDepart;
+    }
+
+
+    public void SetTempsFinal(float p_tempFinal)
+    {
+        _tempsFinal = p_tempFinal - _tempsDepart;
+    }
+
+    public float GetTempsFinal()
+    {
+        return _tempsFinal;
+    }
+
+
+    /******************************************************
     // Accesseur qui retourne le temps pour le niveau 1
     public float GetTempsNiv1()
     {
@@ -77,4 +97,6 @@ public class GestionJeu : MonoBehaviour
         _accrochageNiveau1 = accrochages;
         _tempsNiveau1 = tempsNiv1;
     }
+    ********************************************************/
+
 }
